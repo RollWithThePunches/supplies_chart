@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html" charset="UTF-8">
+  <meta content="utf-8" http-equiv="encoding">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800i" rel="stylesheet">
+
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+
+	<link href="https://fonts.googleapis.com/css?family=Dosis:400,500,600,700" rel="stylesheet">
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+
+	<style>
+
+	@charset "utf-8";
+
+html, body{
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.body-cont{
+	margin: 0 auto;
+	padding: 0;
+	width: 560px;
+	text-align: center;
+	background: #fff;
+	font-family: 'PT Serif', serif;
+	color: #000;
+	background: transparent;
+}
+		#pieChart2002_mobile {
+	display: none;
+	visibility: hidden;
+}
+
+#pieChart2014_mobile {
+	display: none;
+	visibility: hidden;
+}
+
+
+#pieChart {
+	margin: 50px 0 0 -120px;
+	height: 350px;
+	width: 1024px;
+}
+
+#pieContainer {
+	margin: 150px 0 100px -120px;
+	width: 800px;
+	height: 375px;
+}
+
+#pieContainer p {
+	margin: 0;
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 1.3em;
+	line-height: 1.3em;
+	color: #000;
+	text-align: center;
+}
+
+.pie_year {
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 2.8em;
+	fill: #0060a9;
+	text-anchor: middle;
+}
+
+.arc text {
+	font-family: 'Roboto Condensed', sans-serif;
+	font-weight: 400;
+	font-size: 10px;
+	text-anchor: middle;
+}
+
+.legend {
+	width: 1000px;
+}
+
+.legend text {
+	font-family: 'Roboto Condensed', sans-serif;
+	font-weight: 400;
+	font-size: 1em;
+	text-anchor: start;
+}
+
+.arc path {}
+
+@media only screen and (max-width: 460px){
+
+
+body{
+		width: 100%;
+		margin: 0 auto;
+		padding: 0;
+		margin-left: 0;
+		margin-right: 0;
+		}
+
+#pieChart{
+		display: none;
+		visibility: hidden;
+		}
+
+		#pieChart2002_mobile{
+		margin: 0 auto;
+		width: 300px;
+		height: 200px;
+		display: block;
+		visibility: visible;
+		position: relative;
+		}
+
+		#pieChart2014_mobile{
+		margin: 0 auto;
+		width: 300px;
+		height: 370px;
+		display: block;
+		visibility: visible;
+		}
+
+		.pie_year{
+		font-size: 1.5em;
+		}
+
+		#pieContainer{
+		margin: 0;
+		width: 100%;
+		height: 700px;
+		}
+
+		#pieContainer p{
+		margin: 0 auto;
+		margin-left: 10px;
+		margin-right: 10px;
+		width: 100%;
+		text-align: left;
+		}
+
+}
+
+	</style>
+
+</head>
+
+<body>
+  <div class="body-cont">
+				<div id=pieContainer>
+					<div id="pieChart"></div>
+					<div id="pieChart2002_mobile"></div>
+					<div id="pieChart2014_mobile"></div>
+					<p class="body_caption">Percentage of purchases between periods 2002 - 2013 and 2014 - current.</p>
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+/////////////////////////////////
+// Products and Purchases Pie  //
+/////////////////////////////////
+
+var pieData2002 = [{label:'Books & DVDs',value:30}, 
+{label:'Home Supplies',value:35},
+{label:'Food',value:30},
+{label:'Beer & Wine',value:5}];
+
+// Size of the pie not the canvas
+var pieWidth = 500,
+pieHeight = 500,
+pieRadius = Math.min(pieWidth, pieHeight) / 2;
+
+var arc = d3.arc()
+.outerRadius(pieRadius - 100)
+.innerRadius(90);
+
+var labelArc = d3.arc()
+.outerRadius(pieRadius - 40)
+.innerRadius(pieRadius - 40);
+
+var pie = d3.pie()
+.sort(null)
+.value(function(d) { return d.value; });
+
+var legendRectSize = pieRadius * 0.06;
+var legendSpacing = pieRadius * 0.04;
+
+var pieColor = d3.scaleOrdinal()
+.range(["#0060a9", "#e31936", "#4e97c4","#c1cfd3"]);
+
+
+// Pie 2002 Canvas
+var pieCanvas2002 = d3.select('#pieChart')
+.append("svg")
+.attr("width", 300)
+.attr("height", 300)
+.attr("transform", "translate(0," + (pieHeight - 500) + ")")
+.append("g")
+.attr("transform", "translate(150," + (pieHeight - 350) + ")");
+
+var pieGroup2002 = pieCanvas2002.selectAll(".arc")
+.data(pie(pieData2002))
+.enter().append("g")
+.attr("class", "arc");
+
+var text2002 = pieCanvas2002.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,-5)')
+        .text('2002-');
+var text2014 = pieCanvas2002.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,30)')
+        .text('2013');
+
+
+
+// Pie 2014 Canvas
+
+var pieData2014 = [ 
+{label:'Books & DVDs',value:null},
+{label:'Home Supplies',value:35},
+{label:'Food',value:45},
+{label:'Beer & Wine',value:20}];
+
+var pieColor2 = d3.scaleOrdinal()
+.range(["#c1cfd3", "#e31936", "#4e97c4"]);
+
+var pieCanvas2014 = d3.select('#pieChart')
+.append("svg")
+.attr("width", 550)
+.attr("height", 300)
+.attr("transform", "translate(100," + (pieHeight - 500) + ")")
+.append("g")
+.attr("transform", "translate(150," + (pieHeight - 350) + ")");
+
+var pieGroup2014 = pieCanvas2014.selectAll(".arc")
+.data(pie(pieData2014))
+.enter().append("g")
+.attr("class", "arc");
+
+var text2002 = pieCanvas2014.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,-5)')
+        .text('2014-');
+var text2014 = pieCanvas2014.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,30)')
+        .text('Current');
+
+{
+
+                pieGroup2002.append('path')
+                .data(pie(pieData2002))
+                .attr('d', arc)
+                //Below, use d.data.value for numbers to appear in legend.
+                //Use d.data.label for the strings to appear in the legend.
+                .style('fill', function(d,i) { return pieColor(d.data.label); })
+                .transition()
+                //.ease('bounce')
+                .duration(2000)
+                .attrTween('d',tweenPie)
+                .each(function(d) { console.log('path d',d); this._current = d; });
+
+                function tweenPie(b){
+                    b.innerRadius = 0;
+                    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+                    return function(t){ return arc(i(t));};
+                }
+
+                function arcTween(a) {
+                  var i = d3.interpolate(this._current, a);
+                  this._current = i(0);
+                  return function(t) {
+                    return arc(i(t));
+                  };
+              }
+
+              pieGroup2002.append('text')
+                .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
+                .attr('dy', '.35em')
+                .attr('class','pie_percent')
+                .style('font-size',15)
+                .style('fill','#ffffff')
+                .style('text-anchor', 'middle')
+                .text(function(d,i) { return d.data.value + '%'; });
+
+                pieGroup2014.append("path")
+                .data(pie(pieData2014))
+                .attr("d", arc)
+                //Below, use d.data.value for numbers to appear in legend.
+                //Use d.data.label for the strings to appear in the legend.
+                .style("fill", function(d,i) { return pieColor2(d.data.label); })
+                .transition()
+                //.ease('bounce')
+                .duration(2000)
+                .attrTween('d',tweenPie)
+                .each(function(d) { console.log("path d",d); this._current = d; });
+
+                function tweenPie(b){
+                    b.innerRadius = 0;
+                    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+                    return function(t){ return arc(i(t));};
+                }
+
+                function arcTween(a) {
+                  var i = d3.interpolate(this._current, a);
+                  this._current = i(0);
+                  return function(t) {
+                    return arc(i(t));
+                  };
+                }
+
+
+                pieGroup2014.append('text')
+                .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+                .attr("dy", ".35em")
+                .style('font-size',15)
+                .style('fill','#ffffff')
+                .style("text-anchor", "middle")
+                .text(function(d,i) { return d.data.value + '%'; });
+
+                //Legend
+                legendGroup = pieCanvas2014.append('g')
+                .attr('width',120)
+                .attr('height',200)
+                .attr('transform','translate(155,-250)');
+
+                var legend = legendGroup.selectAll('.legend')
+                .data(pieColor.domain())
+                .enter()
+                .append('g')
+                .attr('class', 'legend')
+                .attr('transform', function(d, i) {
+                    var legendHeight = legendRectSize + legendSpacing;
+                    var offset =  legendHeight * pieColor.domain().length / 2;
+                    var horz = legendRectSize;
+                    var vert = i * legendHeight + 100;
+                    return 'translate(' + horz + ',' + vert + ')';
+                }); 
+
+                legend.append('rect')
+                .attr('width', legendRectSize)
+                .attr('height', legendRectSize)
+                .style('fill', pieColor)
+                .style('stroke', pieColor)
+                .style('opacity',0)
+                .transition()
+                .duration(3000)
+                .style('opacity',1);
+
+                legend.append('text')
+                .attr('x', legendRectSize + (legendSpacing + 2 ))
+                .attr('y', legendRectSize - (legendSpacing / 4 ))
+                .text(function(d) { return d; })
+                .style('opacity',0)
+                .transition()
+                .duration(3000)
+                .style('opacity',1);
+
+             };
+
+
+////////////////////////////////////////
+// Products and Purchases Pie MOBILE ///
+////////////////////////////////////////
+
+var pieData2002 = [{label:'Books & DVDs',value:30}, 
+{label:'Home Supplies',value:35},
+{label:'Food',value:35},
+{label:'Beer & Wine',value:5}];
+
+// Size of the pie not the canvas
+var pieWidthMob = 350,
+pieHeightMob = 350,
+pieRadiusMob = Math.min(pieWidthMob, pieHeightMob) / 2;
+
+var arcMob = d3.arc()
+.outerRadius(pieRadiusMob - 80)
+.innerRadius(55);
+
+var labelArc = d3.arc()
+.outerRadius(pieRadiusMob - 40)
+.innerRadius(pieRadiusMob - 40);
+
+var pieMob = d3.pie()
+.sort(null)
+.value(function(d) { return d.value; });
+
+var legendRectSizeMob = pieRadiusMob * 0.06;
+var legendSpacingMob = pieRadiusMob * 0.04;
+
+var pieColor = d3.scaleOrdinal()
+.range(["#0060a9", "#e31936", "#4e97c4","#c1cfd3"]);
+
+
+// Pie 2002 Canvas
+var pieCanvas2002Mob = d3.select('#pieChart2002_mobile')
+.append("svg")
+.attr("width", 300)
+.attr("height", 200)
+.attr("transform", "translate(0,0)")
+.append("g")
+.attr("transform", "translate(150,100)");
+
+var pieGroup2002Mob = pieCanvas2002Mob.selectAll(".arc")
+.data(pie(pieData2002))
+.enter().append("g")
+.attr("class", "arc");
+
+var text2002Mob = pieCanvas2002Mob.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,0)')
+        .text('2002-');
+var text2014Mob = pieCanvas2002Mob.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,20)')
+        .text('2013');
+
+
+
+// Pie 2014 Canvas
+
+var pieData2014 = [{label:'Books & DVDs',value:0}, 
+{label:'Home Supplies',value:35},
+{label:'Food',value:45},
+{label:'Beer & Wine',value:20}];
+
+var pieCanvas2014Mob = d3.select('#pieChart2014_mobile')
+.append("svg")
+.attr("width", 300)
+.attr("height", 350)
+.attr("transform", "translate(0,0)")
+.append("g")
+.attr("transform", "translate(150,130)");
+
+var pieGroup2014Mob = pieCanvas2014Mob.selectAll(".arc")
+.data(pie(pieData2014))
+.enter().append("g")
+.attr("class", "arc");
+
+var text2002Mob = pieCanvas2014Mob.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,0)')
+        .text('2014-');
+var text2014Mob = pieCanvas2014Mob.append('text')
+        .attr('width', 200)
+        .attr('height', 200)
+        .attr('class','pie_year')
+        .attr('transform','translate(0,20)')
+        .text('Current');
+
+
+
+{
+
+                pieGroup2002Mob.append("path")
+                .data(pie(pieData2002))
+                .attr("d", arcMob)
+                //Below, use d.data.value for numbers to appear in legend.
+                //Use d.data.label for the strings to appear in the legend.
+                .style("fill", function(d,i) { return pieColor(d.data.label); })
+                .transition()
+                //.ease('bounce')
+                .duration(2000)
+                .attrTween('d',tweenPie)
+                .each(function(d) { console.log("path d",d); this._current = d; });
+
+                function tweenPie(b){
+                    b.innerRadius = 0;
+                    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+                    return function(t){ return arc(i(t));};
+                }
+
+                function arcTween(a) {
+                  var i = d3.interpolate(this._current, a);
+                  this._current = i(0);
+                  return function(t) {
+                    return arcMob(i(t));
+                  };
+              }
+
+              pieGroup2002Mob.append('text')
+                .attr("transform", function(d) { return "translate(" + arcMob.centroid(d) + ")"; })
+                .attr("dy", ".35em")
+                .style('font-size',15)
+                .style('fill','#ffffff')
+                .style("text-anchor", "middle")
+                .text(function(d,i) { return d.data.value  + '%'; });
+
+
+                pieGroup2014Mob.append("path")
+                .data(pie(pieData2014))
+                .attr("d", arcMob)
+                //Below, use d.data.value for numbers to appear in legend.
+                //Use d.data.label for the strings to appear in the legend.
+                .style("fill", function(d,i) { return pieColor(d.data.label); })
+                .transition()
+                //.ease('bounce')
+                .duration(2000)
+                .attrTween('d',tweenPie)
+                .each(function(d) { console.log("path d",d); this._current = d; });
+
+                function tweenPie(b){
+                    b.innerRadius = 0;
+                    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+                    return function(t){ return arcMob(i(t));};
+                }
+
+                function arcTween(a) {
+                  var i = d3.interpolate(this._current, a);
+                  this._current = i(0);
+                  return function(t) {
+                    return arcMob(i(t));
+                  };
+                }
+
+                pieGroup2014Mob.append('text')
+                .attr("transform", function(d) { return "translate(" + arcMob.centroid(d) + ")"; })
+                .attr("dy", ".35em")
+                .style('font-size',15)
+                .style('fill','#ffffff')
+                .style("text-anchor", "middle")
+                .text(function(d,i) { return d.data.value  + '%'; });
+
+                //Legend
+                legendGroupMob = pieCanvas2014Mob.append('g')
+                .attr('width',120)
+                .attr('height',200)
+                .attr('transform','translate(-60,30)');
+
+                var legendMob = legendGroupMob.selectAll('.legend')
+                .data(pieColor.domain())
+                .enter()
+                .append('g')
+                .attr('class', 'legend')
+                .attr('transform', function(d, i) {
+                    var legendHeightMob = legendRectSizeMob + legendSpacingMob;
+                    var offsetMob =  legendHeightMob * pieColor.domain().length / 2;
+                    var horzMob = legendRectSizeMob;
+                    var vertMob = i * legendHeightMob + 100;
+                    return 'translate(' + horzMob + ',' + vertMob + ')';
+                }); 
+
+                legendMob.append('rect')
+                .attr('width', legendRectSizeMob)
+                .attr('height', legendRectSizeMob)
+                .style('fill', pieColor)
+                .style('stroke', pieColor)
+                .style('opacity',0)
+                .transition()
+                .duration(3000)
+                .style('opacity',1);
+
+                legendMob.append('text')
+                .attr('x', legendRectSizeMob + (legendSpacingMob + 2 ))
+                .attr('y', legendRectSizeMob - (legendSpacingMob / 4 ))
+                .text(function(d) { return d; })
+                .style('opacity',0)
+                .transition()
+                .duration(3000)
+                .style('opacity',1);
+
+            $triggered_spinMob = 1; 
+
+        };
+
+
+</script>
+
+</html>
