@@ -2,331 +2,321 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-type" content="text/html" charset="UTF-8">
-  	<meta content="utf-8" http-equiv="encoding">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  	<script src="https://d3js.org/d3.v4.min.js"></script>
 
+    <!-- D3 V4 -->
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800i" rel="stylesheet">
-
 	<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
-
 	<link href="https://fonts.googleapis.com/css?family=Dosis:400,500,600,700" rel="stylesheet">
-
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
 
 	<style>
 
-		@charset "utf-8";
+	@charset "utf-8";
 
-		html, body{
-			width: 100%;
-			margin: 0;
-			padding: 0;
-		}
+            html{
+            	width: 100%;
+            	margin: 0;
+            	padding: 0;
+            }
 
-		.body-cont{
-			margin: 0 auto;
-			padding: 0;
-			width: 560px;
-			text-align: center;
-			background: #fff;
-			font-family: 'PT Serif', serif;
-			color: #000;
-			background: transparent;
-		}
-				#pieChart2002_mobile {
-			display: none;
-			visibility: hidden;
-		}
+            .body-cont{
+            	margin: 0 auto;
+            	padding: 0;
+            	width: 560px;
+            	text-align: center;
+            	background: #fff;
+            	font-family: 'PT Serif', serif;
+            	color: #000;
+            	background: transparent;
+            }
+            		#pieChart2002_mobile {
+            	display: none;
+            	visibility: hidden;
+            }
 
-		#pieChart2014_mobile {
-			display: none;
-			visibility: hidden;
-		}
+            #pieChart2014_mobile {
+            	display: none;
+            	visibility: hidden;
+            }
 
 
-		#pieChart {
-			margin: 50px 0 0 -120px;
-			height: 350px;
-			width: 1024px;
-		}
+            #pieChart {
+            	margin: 50px 0 0 -120px;
+            	height: 350px;
+            	width: 1024px;
+            }
 
-		#pieContainer {
-			margin: 150px 0 100px -120px;
-			width: 800px;
-			height: 375px;
-		}
+            #pieContainer {
+            	margin: 150px 0 100px -120px;
+            	width: 800px;
+            	height: 375px;
+            }
 
-		#pieContainer p {
-			margin: 0;
-			font-family: 'Roboto Condensed', sans-serif;
-			font-size: 1.3em;
-			line-height: 1.3em;
-			color: #000;
-			text-align: center;
-		}
+            #pieContainer p {
+            	margin: 0;
+            	font-family: 'Roboto Condensed', sans-serif;
+            	font-size: 1.3em;
+            	line-height: 1.3em;
+            	color: #000;
+            	text-align: center;
+            }
 
-		.pie_year {
-			font-family: 'Roboto Condensed', sans-serif;
-			font-size: 2.8em;
-			fill: #0060a9;
-			text-anchor: middle;
-		}
+            .pie_year {
+            	font-family: 'Roboto Condensed', sans-serif;
+            	font-size: 2.8em;
+            	fill: #0060a9;
+            	text-anchor: middle;
+            }
 
-		.arc text {
-			font-family: 'Roboto Condensed', sans-serif;
-			font-weight: 400;
-			font-size: 10px;
-			text-anchor: middle;
-		}
+            .arc text {
+            	font-family: 'Roboto Condensed', sans-serif;
+            	font-weight: 400;
+            	font-size: 10px;
+            	text-anchor: middle;
+            }
 
-		.legend {
-			width: 1000px;
-		}
+            .legend {
+            	width: 1000px;
+            }
 
-		.legend text {
-			font-family: 'Roboto Condensed', sans-serif;
-			font-weight: 400;
-			font-size: 1em;
-			text-anchor: start;
-		}
+            .legend text {
+            	font-family: 'Roboto Condensed', sans-serif;
+            	font-weight: 400;
+            	font-size: 1em;
+            	text-anchor: start;
+            }
 
-		.arc path {}
 	</style>
 
 </head>
 
 <body>
-  	<div class="body-cont">
+	<div class="body-cont">
 		<div id=pieContainer>
 			<div id="pieChart"></div>
 			<p class="body_caption">Percentage of purchases between periods 2002 - 2013 and 2014 - current.</p>
 		</div>
-	</div>
+    </div>
 
 </body>
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-		/////////////////////////////////
-		// Products and Purchases Pie  //
-		/////////////////////////////////
+        /////////////////////////////////
+        // Products and Purchases Pie  //
+        /////////////////////////////////
 
-		var pieData2002 = [{label:'Books & DVDs',value:30}, 
-			{label:'Home Supplies',value:35},
-			{label:'Food',value:30},
-			{label:'Beer & Wine',value:5}];
+        var pieData2002 = [{label:'Books & DVDs',value:30}, 
+        {label:'Home Supplies',value:35},
+        {label:'Food',value:30},
+        {label:'Beer & Wine',value:5}];
 
-		// Size of the pie not the canvas
-		var pieWidth = 500,
-		pieHeight = 500,
-		pieRadius = Math.min(pieWidth, pieHeight) / 2;
+        // Size of the pie not the canvas
+        var pieWidth = 500,
+        pieHeight = 500,
+        pieRadius = Math.min(pieWidth, pieHeight) / 2;
 
-		var arc = d3.arc()
-			.outerRadius(pieRadius - 100)
-			.innerRadius(90);
+        var arc = d3.arc()
+        .outerRadius(pieRadius - 100)
+        .innerRadius(90);
 
-		var labelArc = d3.arc()
-			.outerRadius(pieRadius - 40)
-			.innerRadius(pieRadius - 40);
+        var labelArc = d3.arc()
+        .outerRadius(pieRadius - 40)
+        .innerRadius(pieRadius - 40);
 
-		var pie = d3.pie()
-			.sort(null)
-			.value(function(d) { return d.value; });
+        var pie = d3.pie()
+        .sort(null)
+        .value(function(d) { return d.value; });
 
-		var legendRectSize = pieRadius * 0.06;
-		var legendSpacing = pieRadius * 0.04;
+        var legendRectSize = pieRadius * 0.06;
+        var legendSpacing = pieRadius * 0.04;
 
-		var pieColor = d3.scaleOrdinal()
-		.range(["#0060a9", "#e31936", "#4e97c4","#c1cfd3"]);
-
-
-		// Pie 2002 Canvas
-		var pieCanvas2002 = d3.select('#pieChart')
-		.append("svg")
-		.attr("width", 300)
-		.attr("height", 300)
-		.attr("transform", "translate(0," + (pieHeight - 500) + ")")
-		.append("g")
-		.attr("transform", "translate(150," + (pieHeight - 350) + ")");
-
-		var pieGroup2002 = pieCanvas2002.selectAll(".arc")
-		.data(pie(pieData2002))
-		.enter().append("g")
-		.attr("class", "arc");
-
-		var text2002 = pieCanvas2002.append('text')
-			.attr('width', 200)
-			.attr('height', 200)
-			.attr('class','pie_year')
-			.attr('transform','translate(0,-5)')
-			.text('2002-');
-		var text2014 = pieCanvas2002.append('text')
-			.attr('width', 200)
-			.attr('height', 200)
-			.attr('class','pie_year')
-			.attr('transform','translate(0,30)')
-			.text('2013');
+        var pieColor = d3.scaleOrdinal()
+        .range(["#0060a9", "#e31936", "#4e97c4","#c1cfd3"]);
 
 
-		// Pie 2014 Canvas
+        // Pie 2002 Canvas
+        var pieCanvas2002 = d3.select('#pieChart')
+        .append("svg")
+        .attr("width", 300)
+        .attr("height", 300)
+        .attr("transform", "translate(0," + (pieHeight - 500) + ")")
+        .append("g")
+        .attr("transform", "translate(150," + (pieHeight - 350) + ")");
 
-		var pieData2014 = [ 
-			{label:'Books & DVDs',value:null},
-			{label:'Home Supplies',value:35},
-			{label:'Food',value:45},
-			{label:'Beer & Wine',value:20}];
+        var pieGroup2002 = pieCanvas2002.selectAll(".arc")
+        .data(pie(pieData2002))
+        .enter().append("g")
+        .attr("class", "arc");
 
-		var pieColor2 = d3.scaleOrdinal()
-			.range(["#c1cfd3", "#e31936", "#4e97c4"]);
-
-		var pieCanvas2014 = d3.select('#pieChart')
-			.append("svg")
-			.attr("width", 550)
-			.attr("height", 300)
-			.attr("transform", "translate(100," + (pieHeight - 500) + ")")
-			.append("g")
-			.attr("transform", "translate(150," + (pieHeight - 350) + ")");
-
-		var pieGroup2014 = pieCanvas2014.selectAll(".arc")
-			.data(pie(pieData2014))
-			.enter().append("g")
-			.attr("class", "arc");
-
-		var text2002 = pieCanvas2014.append('text')
-			.attr('width', 200)
-			.attr('height', 200)
-			.attr('class','pie_year')
-			.attr('transform','translate(0,-5)')
-			.text('2014-');
-		var text2014 = pieCanvas2014.append('text')
-			.attr('width', 200)
-			.attr('height', 200)
-			.attr('class','pie_year')
-			.attr('transform','translate(0,30)')
-			.text('Current');
-
-		jQuery(document).ready(function($){
-
-    		$triggered_spin = 0;
-
-    		$(window).on('scroll', function() {
-			pieGroup2002.append('path')
-				.data(pie(pieData2002))
-				.attr('d', arc)
-				//Below, use d.data.value for numbers to appear in legend.
-				//Use d.data.label for the strings to appear in the legend.
-				.style('fill', function(d,i) { return pieColor(d.data.label); })
-				.transition()
-				//.ease('bounce')
-				.duration(2000)
-				.attrTween('d',tweenPie)
-				.each(function(d) { console.log('path d',d); this._current = d; });
-
-			function tweenPie(b){
-			    b.innerRadius = 0;
-			    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-			    return function(t){ return arc(i(t));};
-			}
-
-			function arcTween(a) {
-			  var i = d3.interpolate(this._current, a);
-			  this._current = i(0);
-			  return function(t) {
-			    return arc(i(t));
-			  };
-	      		}
-
-		      pieGroup2002.append('text')
-				.attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
-				.attr('dy', '.35em')
-				.attr('class','pie_percent')
-				.style('font-size',15)
-				.style('fill','#ffffff')
-				.style('text-anchor', 'middle')
-				.text(function(d,i) { return d.data.value + '%'; });
-
-			pieGroup2014.append("path")
-				.data(pie(pieData2014))
-				.attr("d", arc)
-				//Below, use d.data.value for numbers to appear in legend.
-				//Use d.data.label for the strings to appear in the legend.
-				.style("fill", function(d,i) { return pieColor2(d.data.label); })
-				.transition()
-				//.ease('bounce')
-				.duration(2000)
-				.attrTween('d',tweenPie)
-				.each(function(d) { console.log("path d",d); this._current = d; });
-
-			function tweenPie(b){
-				    b.innerRadius = 0;
-				    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-				    return function(t){ return arc(i(t));};
-			}
-
-			function arcTween(a) {
-				  var i = d3.interpolate(this._current, a);
-				  this._current = i(0);
-				  return function(t) {
-				    return arc(i(t));
-			  };
-			}
+        var text2002 = pieCanvas2002.append('text')
+                .attr('width', 200)
+                .attr('height', 200)
+                .attr('class','pie_year')
+                .attr('transform','translate(0,-5)')
+                .text('2002-');
+        var text2014 = pieCanvas2002.append('text')
+                .attr('width', 200)
+                .attr('height', 200)
+                .attr('class','pie_year')
+                .attr('transform','translate(0,30)')
+                .text('2013');
 
 
-			pieGroup2014.append('text')
-				.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-				.attr("dy", ".35em")
-				.style('font-size',15)
-				.style('fill','#ffffff')
-				.style("text-anchor", "middle")
-				.text(function(d,i) { return d.data.value + '%'; });
 
-			//Legend
-			legendGroup = pieCanvas2014.append('g')
-				.attr('width',120)
-				.attr('height',200)
-				.attr('transform','translate(155,-250)');
+        // Pie 2014 Canvas
 
-			var legend = legendGroup.selectAll('.legend')
-				.data(pieColor.domain())
-				.enter()
-				.append('g')
-				.attr('class', 'legend')
-				.attr('transform', function(d, i) {
-				    var legendHeight = legendRectSize + legendSpacing;
-				    var offset =  legendHeight * pieColor.domain().length / 2;
-				    var horz = legendRectSize;
-				    var vert = i * legendHeight + 100;
-				    return 'translate(' + horz + ',' + vert + ')';
-			}); 
+        var pieData2014 = [ 
+        {label:'Books & DVDs',value:null},
+        {label:'Home Supplies',value:35},
+        {label:'Food',value:45},
+        {label:'Beer & Wine',value:20}];
 
-			legend.append('rect')
-				.attr('width', legendRectSize)
-				.attr('height', legendRectSize)
-				.style('fill', pieColor)
-				.style('stroke', pieColor)
-				.style('opacity',0)
-				.transition()
-				.duration(3000)
-				.style('opacity',1);
+        var pieColor2 = d3.scaleOrdinal()
+        .range(["#c1cfd3", "#e31936", "#4e97c4"]);
 
-			legend.append('text')
-				.attr('x', legendRectSize + (legendSpacing + 2 ))
-				.attr('y', legendRectSize - (legendSpacing / 4 ))
-				.text(function(d) { return d; })
-				.style('opacity',0)
-				.transition()
-				.duration(3000)
-				.style('opacity',1);
+        var pieCanvas2014 = d3.select('#pieChart')
+        .append("svg")
+        .attr("width", 550)
+        .attr("height", 300)
+        .attr("transform", "translate(100," + (pieHeight - 500) + ")")
+        .append("g")
+        .attr("transform", "translate(150," + (pieHeight - 350) + ")");
 
-		};
+        var pieGroup2014 = pieCanvas2014.selectAll(".arc")
+        .data(pie(pieData2014))
+        .enter().append("g")
+        .attr("class", "arc");
 
-		    $triggered_spinMob = 1; 
+        var text2002 = pieCanvas2014.append('text')
+                .attr('width', 200)
+                .attr('height', 200)
+                .attr('class','pie_year')
+                .attr('transform','translate(0,-5)')
+                .text('2014-');
+        var text2014 = pieCanvas2014.append('text')
+                .attr('width', 200)
+                .attr('height', 200)
+                .attr('class','pie_year')
+                .attr('transform','translate(0,30)')
+                .text('Current');
 
-		};
+        {
+
+                        pieGroup2002.append('path')
+                        .data(pie(pieData2002))
+                        .attr('d', arc)
+                        //Below, use d.data.value for numbers to appear in legend.
+                        //Use d.data.label for the strings to appear in the legend.
+                        .style('fill', function(d,i) { return pieColor(d.data.label); })
+                        .transition()
+                        //.ease('bounce')
+                        .duration(2000)
+                        .attrTween('d',tweenPie)
+                        .each(function(d) { console.log('path d',d); this._current = d; });
+
+                        function tweenPie(b){
+                            b.innerRadius = 0;
+                            var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+                            return function(t){ return arc(i(t));};
+                        }
+
+                        function arcTween(a) {
+                          var i = d3.interpolate(this._current, a);
+                          this._current = i(0);
+                          return function(t) {
+                            return arc(i(t));
+                          };
+                      }
+
+                      pieGroup2002.append('text')
+                        .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
+                        .attr('dy', '.35em')
+                        .attr('class','pie_percent')
+                        .style('font-size',15)
+                        .style('fill','#ffffff')
+                        .style('text-anchor', 'middle')
+                        .text(function(d,i) { return d.data.value + '%'; });
+
+                        pieGroup2014.append("path")
+                        .data(pie(pieData2014))
+                        .attr("d", arc)
+                        //Below, use d.data.value for numbers to appear in legend.
+                        //Use d.data.label for the strings to appear in the legend.
+                        .style("fill", function(d,i) { return pieColor2(d.data.label); })
+                        .transition()
+                        //.ease('bounce')
+                        .duration(2000)
+                        .attrTween('d',tweenPie)
+                        .each(function(d) { console.log("path d",d); this._current = d; });
+
+                        function tweenPie(b){
+                            b.innerRadius = 0;
+                            var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+                            return function(t){ return arc(i(t));};
+                        }
+
+                        function arcTween(a) {
+                          var i = d3.interpolate(this._current, a);
+                          this._current = i(0);
+                          return function(t) {
+                            return arc(i(t));
+                          };
+                        }
 
 
-	</script>
+                        pieGroup2014.append('text')
+                        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+                        .attr("dy", ".35em")
+                        .style('font-size',15)
+                        .style('fill','#ffffff')
+                        .style("text-anchor", "middle")
+                        .text(function(d,i) { return d.data.value + '%'; });
+
+                        //Legend
+                        legendGroup = pieCanvas2014.append('g')
+                        .attr('width',120)
+                        .attr('height',200)
+                        .attr('transform','translate(155,-250)');
+
+                        var legend = legendGroup.selectAll('.legend')
+                        .data(pieColor.domain())
+                        .enter()
+                        .append('g')
+                        .attr('class', 'legend')
+                        .attr('transform', function(d, i) {
+                            var legendHeight = legendRectSize + legendSpacing;
+                            var offset =  legendHeight * pieColor.domain().length / 2;
+                            var horz = legendRectSize;
+                            var vert = i * legendHeight + 100;
+                            return 'translate(' + horz + ',' + vert + ')';
+                        }); 
+
+                        legend.append('rect')
+                        .attr('width', legendRectSize)
+                        .attr('height', legendRectSize)
+                        .style('fill', pieColor)
+                        .style('stroke', pieColor)
+                        .style('opacity',0)
+                        .transition()
+                        .duration(3000)
+                        .style('opacity',1);
+
+                        legend.append('text')
+                        .attr('x', legendRectSize + (legendSpacing + 2 ))
+                        .attr('y', legendRectSize - (legendSpacing / 4 ))
+                        .text(function(d) { return d; })
+                        .style('opacity',0)
+                        .transition()
+                        .duration(3000)
+                        .style('opacity',1);
+
+                     };
+
+    </script>
 
 </html>
